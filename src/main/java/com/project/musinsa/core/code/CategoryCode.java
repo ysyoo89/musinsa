@@ -26,4 +26,11 @@ public enum CategoryCode {
                 .findAny()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("카테고리에 %s가 존재하지 않습니다.", category)));
     }
+
+    public static CategoryCode fromName(String categoryName) {
+        return Arrays.stream(CategoryCode.values())
+                .filter(m -> m.getName().equals(categoryName))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("카테고리에 %s가 존재하지 않습니다.", categoryName)));
+    }
 }

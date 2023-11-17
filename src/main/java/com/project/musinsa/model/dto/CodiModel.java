@@ -1,8 +1,12 @@
 package com.project.musinsa.model.dto;
 
+import com.project.musinsa.core.code.CategoryCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 @Getter
 @Setter

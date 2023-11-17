@@ -1,5 +1,6 @@
 package com.project.musinsa.model.convertor;
 
+import com.project.musinsa.api.request.CodiRequest;
 import com.project.musinsa.api.response.model.LowestModel;
 import com.project.musinsa.entity.CodiEntity;
 import com.project.musinsa.model.dto.CodiModel;
@@ -14,4 +15,6 @@ public interface CodiConvertor {
 
     List<CodiModel> toDtoList(List<CodiEntity> list);
     LowestModel toLowest(CodiModel model);
+
+    CodiEntity createToEntity(CodiRequest request);
 }
