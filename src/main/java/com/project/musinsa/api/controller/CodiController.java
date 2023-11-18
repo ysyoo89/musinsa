@@ -30,13 +30,13 @@ public class CodiController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createCodi(@RequestBody CodiRequest codiRequest) {
-        codiService.createCodi(codiRequest);
+        codiService.createAndModifyCodi(codiRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PutMapping("/modify")
     public ResponseEntity<?> modifyCodi(@RequestBody CodiRequest codiRequest) {
-        codiService.modifyCodi(codiRequest);
+        codiService.createAndModifyCodi(codiRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
