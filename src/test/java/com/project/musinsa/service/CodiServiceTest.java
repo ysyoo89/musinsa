@@ -21,10 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
@@ -166,17 +163,31 @@ public class CodiServiceTest {
     }
 
     @Test
-    void createAndModifyCodi() {
-        CodiEntity entity = new CodiEntity("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
-        doReturn(entity).when(codiRepository).save(any(CodiEntity.class));
-        CodiRequest request = new CodiRequest("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
+    void createCodi() {
+        final CodiEntity entity = new CodiEntity("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
+        final CodiRequest request = new CodiRequest("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
         codiService.createAndModifyCodi(request);
 
-        verify(codiRepository).save(entity);
+        verify(codiRepository).save(ArgumentMatchers.refEq(entity));
+    }
+
+    @Test
+    void modifyCodi() {
+        final CodiEntity entity = new CodiEntity("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
+        final CodiRequest request = new CodiRequest("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
+        codiService.createAndModifyCodi(request);
+
+        verify(codiRepository).save(ArgumentMatchers.refEq(entity));
+
     }
 
     @Test
     void removeCodi() {
+        final CodiEntity entity = new CodiEntity("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
+        final CodiRequest request = new CodiRequest("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
+        codiService.removeCodi(request);
+
+        verify(codiRepository).deleteById(entity.getBrand());
 
     }
 }
