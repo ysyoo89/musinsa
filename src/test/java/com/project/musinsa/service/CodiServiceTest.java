@@ -1,8 +1,15 @@
 package com.project.musinsa.service;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.project.musinsa.api.request.CodiRequest;
 import com.project.musinsa.api.response.BestItemResponse;
 import com.project.musinsa.api.response.model.BestItemModel;
 import com.project.musinsa.core.code.CategoryCode;
+import com.project.musinsa.core.exception.code.ErrorCode;
+import com.project.musinsa.core.exception.exception.CustomException;
+import com.project.musinsa.core.util.CategoryUtil;
+import com.project.musinsa.core.util.NumberUtil;
 import com.project.musinsa.entity.CodiEntity;
 import com.project.musinsa.model.convertor.CodiConvertor;
 import com.project.musinsa.model.dto.CodiModel;
@@ -20,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +42,6 @@ public class CodiServiceTest {
     private CodiConvertor codiConvertor = Mappers.getMapper(CodiConvertor.class);
     @Mock
     private CodiRepository codiRepository;
-    @Spy
     @InjectMocks
     private CodiService codiService;
 
@@ -66,6 +73,7 @@ public class CodiServiceTest {
         list.add(new BestItemModel("F", "1,900", 1900L, CategoryCode.ACCESSORIES));
         BestItemResponse mockResponse = new BestItemResponse(list);
         doReturn(codiEntities).when(codiRepository).findAll();
+
         BestItemResponse resultResponse = codiService.getBestItems();
 
         assertThat(resultResponse.getTotalPrice()).isEqualTo(mockResponse.getTotalPrice());
@@ -73,17 +81,102 @@ public class CodiServiceTest {
 
     @Test
     void getLowest() {
+        doReturn(codiEntities).when(codiRepository).findAll();
+
+        String mockResult = lowestJson();
+
+        assertThat(codiService.getLowest()).isEqualTo(mockResult);
+    }
+
+    private String lowestJson() {
+        JsonObject jo = new JsonObject();
+        JsonObject lowestObject = new JsonObject();
+        lowestObject.addProperty("브랜드", "D");
+        JsonArray array = new JsonArray();
+
+        JsonObject categoryObject1 = new JsonObject();
+        categoryObject1.addProperty("카테고리", "상의");
+        categoryObject1.addProperty("가격", "10,100");
+        array.add(categoryObject1);
+        JsonObject categoryObject2 = new JsonObject();
+        categoryObject2.addProperty("카테고리", "아우터");
+        categoryObject2.addProperty("가격", "5,100");
+        array.add(categoryObject2);
+        JsonObject categoryObject3 = new JsonObject();
+        categoryObject3.addProperty("카테고리", "바지");
+        categoryObject3.addProperty("가격", "3,000");
+        array.add(categoryObject3);
+        JsonObject categoryObject4 = new JsonObject();
+        categoryObject4.addProperty("카테고리", "스니커즈");
+        categoryObject4.addProperty("가격", "9,500");
+        array.add(categoryObject4);
+        JsonObject categoryObject5 = new JsonObject();
+        categoryObject5.addProperty("카테고리", "가방");
+        categoryObject5.addProperty("가격", "2,500");
+        array.add(categoryObject5);
+        JsonObject categoryObject6 = new JsonObject();
+        categoryObject6.addProperty("카테고리", "모자");
+        categoryObject6.addProperty("가격", "1,500");
+        array.add(categoryObject6);
+        JsonObject categoryObject7 = new JsonObject();
+        categoryObject7.addProperty("카테고리", "양말");
+        categoryObject7.addProperty("가격", "2,400");
+        array.add(categoryObject7);
+        JsonObject categoryObject8 = new JsonObject();
+        categoryObject8.addProperty("카테고리", "액세서리");
+        categoryObject8.addProperty("가격", "2,000");
+        array.add(categoryObject8);
+
+        lowestObject.add("카테고리", array);
+        lowestObject.addProperty("총액", "36,100");
+        jo.add("최저가", lowestObject);
+
+        return jo.toString();
     }
 
     @Test
     void getCategoryItems() {
+        doReturn(codiEntities).when(codiRepository).findAll();
+
+        String mockJson = mockCategoryItemJson();
+
+        assertThat(codiService.getCategoryItems("상의")).isEqualTo(mockJson);
+
+    }
+
+    private String mockCategoryItemJson() {
+        JsonObject jo = new JsonObject();
+        jo.addProperty("카테고리", "상의");
+
+        JsonArray minArray = new JsonArray();
+        JsonObject minJo = new JsonObject();
+        minJo.addProperty("브랜드", "C");
+        minJo.addProperty("가격", "10,000");
+        minArray.add(minJo);
+        jo.add("최저가", minArray);
+
+        JsonArray maxArray = new JsonArray();
+        JsonObject maxJo = new JsonObject();
+        maxJo.addProperty("브랜드", "I");
+        maxJo.addProperty("가격", "11,400");
+        maxArray.add(maxJo);
+
+        jo.add("최고가", maxArray);
+        return jo.toString();
     }
 
     @Test
     void createAndModifyCodi() {
+        CodiEntity entity = new CodiEntity("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
+        doReturn(entity).when(codiRepository).save(any(CodiEntity.class));
+        CodiRequest request = new CodiRequest("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
+        codiService.createAndModifyCodi(request);
+
+        verify(codiRepository).save(entity);
     }
 
     @Test
     void removeCodi() {
+
     }
 }
