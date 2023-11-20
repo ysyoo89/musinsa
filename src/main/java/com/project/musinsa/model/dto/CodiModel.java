@@ -1,6 +1,7 @@
 package com.project.musinsa.model.dto;
 
 import com.project.musinsa.core.code.CategoryCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.NoSuchElementException;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CodiModel {
 
     private String brand;

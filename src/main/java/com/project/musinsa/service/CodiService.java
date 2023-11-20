@@ -43,7 +43,6 @@ public class CodiService {
         list.add(new BestItemModel().setBag(models));
         list.add(new BestItemModel().setHat(models));
         list.add(new BestItemModel().setSock(models));
-        list.add(new BestItemModel().setSneakers(models));
         list.add(new BestItemModel().setAccessories(models));
 
         return new BestItemResponse(list);
