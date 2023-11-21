@@ -8,6 +8,7 @@ import com.project.musinsa.api.response.model.BestItemModel;
 import com.project.musinsa.core.code.CategoryCode;
 import com.project.musinsa.core.exception.code.ErrorCode;
 import com.project.musinsa.core.exception.exception.CustomException;
+import com.project.musinsa.core.exception.response.ErrorResponse;
 import com.project.musinsa.core.util.CategoryUtil;
 import com.project.musinsa.core.util.NumberUtil;
 import com.project.musinsa.entity.CodiEntity;
@@ -17,6 +18,7 @@ import com.project.musinsa.repository.CodiRepository;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.Mapper;
@@ -58,7 +60,8 @@ public class CodiServiceTest {
     }
 
     @Test
-    public void getBestItems() {
+    @DisplayName("Success getBestItems")
+    public void getBestItemsSuccess() {
         List<BestItemModel> list = new ArrayList<>();
         list.add(new BestItemModel("C", "10,000", 10000L, CategoryCode.TOP));
         list.add(new BestItemModel("E", "5,000", 5000L, CategoryCode.OUTER));
@@ -77,12 +80,33 @@ public class CodiServiceTest {
     }
 
     @Test
-    void getLowest() {
+    @DisplayName("Fail getBestItems")
+    public void getBestItemsFail() {
+        List<CodiEntity> emptyList = new ArrayList<>();
+        doReturn(emptyList).when(codiRepository).findAll();
+
+        CustomException e = assertThrows(CustomException.class, () -> codiService.getBestItems());
+        assertThat(e.getErrorCode().getStatus()).isEqualTo(ErrorCode.NOT_DATA.getStatus());
+    }
+
+    @Test
+    @DisplayName("Success getLowest")
+    void getLowestSuccess() {
         doReturn(codiEntities).when(codiRepository).findAll();
 
         String mockResult = lowestJson();
 
         assertThat(codiService.getLowest()).isEqualTo(mockResult);
+    }
+
+    @Test
+    @DisplayName("Fail getLowest")
+    void getLowestFail() {
+        List<CodiEntity> emptyList = new ArrayList<>();
+        doReturn(emptyList).when(codiRepository).findAll();
+
+        CustomException e = assertThrows(CustomException.class, () -> codiService.getLowest());
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
     private String lowestJson() {
@@ -132,13 +156,23 @@ public class CodiServiceTest {
     }
 
     @Test
-    void getCategoryItems() {
+    @DisplayName("Success getCategoryItems")
+    void getCategoryItemsSuccess() {
         doReturn(codiEntities).when(codiRepository).findAll();
 
         String mockJson = mockCategoryItemJson();
 
         assertThat(codiService.getCategoryItems("상의")).isEqualTo(mockJson);
+    }
 
+    @Test
+    @DisplayName("Fail getCategoryItems")
+    void getCategoryItemsFail() {
+        List<CodiEntity> emptyList = new ArrayList<>();
+        doReturn(emptyList).when(codiRepository).findAll();
+
+        CustomException e = assertThrows(CustomException.class, () -> codiService.getLowest());
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
     private String mockCategoryItemJson() {
@@ -163,6 +197,7 @@ public class CodiServiceTest {
     }
 
     @Test
+    @DisplayName("Success Save")
     void createCodi() {
         final CodiEntity entity = new CodiEntity("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
         final CodiRequest request = new CodiRequest("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
@@ -172,6 +207,7 @@ public class CodiServiceTest {
     }
 
     @Test
+    @DisplayName("Success update")
     void modifyCodi() {
         final CodiEntity entity = new CodiEntity("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
         final CodiRequest request = new CodiRequest("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
@@ -182,12 +218,29 @@ public class CodiServiceTest {
     }
 
     @Test
-    void removeCodi() {
+    @DisplayName("Fail save")
+    void saveCodiFail(){
+        CodiRequest emptyRequest = new CodiRequest();
+        CustomException e = assertThrows(CustomException.class, () -> codiService.createAndModifyCodi(emptyRequest));
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.REQUEST_DATA_NULL_POINT.getMessage());
+    }
+
+    @Test
+    @DisplayName("Success Delete")
+    void removeCodiSuccess() {
         final CodiEntity entity = new CodiEntity("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
         final CodiRequest request = new CodiRequest("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
         codiService.removeCodi(request);
 
         verify(codiRepository).deleteById(entity.getBrand());
+    }
 
+    @Test
+    @DisplayName("Fail Delete")
+    void removeCodiFail() {
+        final CodiRequest emptyRequest = new CodiRequest();
+        CustomException e = assertThrows(CustomException.class, () -> codiService.createAndModifyCodi(emptyRequest));
+
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.REQUEST_DATA_NULL_POINT.getMessage());
     }
 }

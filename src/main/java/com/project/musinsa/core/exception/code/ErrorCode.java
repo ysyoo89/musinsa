@@ -27,7 +27,12 @@ public enum ErrorCode {
     /**
      * Null point 처리
      */
-    REQUEST_DATA_NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR, "데이터가 적합하지 않습니다.");
+    REQUEST_DATA_NULL_POINT(HttpStatus.INTERNAL_SERVER_ERROR, "데이터가 적합하지 않습니다."),
+
+    /**
+     * Not Data : 데이터 없을 때 처리
+     */
+    NOT_DATA(HttpStatus.INTERNAL_SERVER_ERROR, "데이터가 존재하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

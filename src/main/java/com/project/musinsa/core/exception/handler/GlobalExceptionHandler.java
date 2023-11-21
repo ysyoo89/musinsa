@@ -4,12 +4,14 @@ import com.project.musinsa.core.exception.code.ErrorCode;
 import com.project.musinsa.core.exception.exception.CustomException;
 import com.project.musinsa.core.exception.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
@@ -26,5 +28,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(ErrorCode.INTERNAL_SERVER_ERROR.getStatus().value())
                 .body(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR));
+    }
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<ErrorResponse> handleNullException(NullPointerException e) {
+        log.error("handleNullException: {}", e.getMessage());
+        return ResponseEntity
+                .status(ErrorCode.NOT_DATA.getStatus().value())
+                .body(new ErrorResponse(ErrorCode.NOT_DATA));
     }
 }

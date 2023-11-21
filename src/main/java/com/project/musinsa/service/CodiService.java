@@ -1,17 +1,12 @@
 package com.project.musinsa.service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.project.musinsa.api.request.CodiRequest;
 import com.project.musinsa.api.response.BestItemResponse;
 import com.project.musinsa.api.response.model.BestItemModel;
-import com.project.musinsa.api.response.model.LowestModel;
-import com.project.musinsa.core.code.CategoryCode;
 import com.project.musinsa.core.exception.code.ErrorCode;
 import com.project.musinsa.core.exception.exception.CustomException;
 import com.project.musinsa.core.util.CategoryUtil;
 import com.project.musinsa.core.util.JsonUtil;
-import com.project.musinsa.core.util.NumberUtil;
 import com.project.musinsa.entity.CodiEntity;
 import com.project.musinsa.model.convertor.CodiConvertor;
 import com.project.musinsa.model.dto.CodiModel;
@@ -20,11 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -67,18 +60,20 @@ public class CodiService {
 
     @Transactional
     public void createAndModifyCodi(CodiRequest codiRequest) {
-        CodiEntity entity = codiConvertor.createToEntity(codiRequest);
-        if (entity == null) {
+        try {
+            CodiEntity entity = codiConvertor.createToEntity(codiRequest);
+            codiRepository.save(entity);
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.REQUEST_DATA_NULL_POINT);
         }
-        codiRepository.save(entity);
     }
 
     @Transactional
     public void removeCodi(CodiRequest codiRequest) {
-        if (codiRequest.getBrand() == null) {
+        try {
+            codiRepository.deleteById(codiRequest.getBrand());
+        } catch (Exception e) {
             throw new CustomException(ErrorCode.REQUEST_DATA_NULL_POINT);
         }
-        codiRepository.deleteById(codiRequest.getBrand());
     }
 }
