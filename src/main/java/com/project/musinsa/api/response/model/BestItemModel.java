@@ -70,11 +70,11 @@ public class BestItemModel {
         return new BestItemModel(model.getBrand(), NumberUtil.numberComma(model.getHat()), model.getHat(), CategoryCode.HAT);
     }
 
-    public BestItemModel setSock(List<CodiModel> models) {
+    public BestItemModel setSocks(List<CodiModel> models) {
         CodiModel model = models.stream()
-                .min(Comparator.comparing(CodiModel::getSock))
+                .min(Comparator.comparing(CodiModel::getSocks))
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_DATA));
-        return new BestItemModel(model.getBrand(), NumberUtil.numberComma(model.getSock()), model.getSock(), CategoryCode.SOCK);
+        return new BestItemModel(model.getBrand(), NumberUtil.numberComma(model.getSocks()), model.getSocks(), CategoryCode.SOCK);
     }
 
     public BestItemModel setAccessories(List<CodiModel> models) {

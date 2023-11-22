@@ -17,6 +17,6 @@ public class LowestModel implements Serializable {
     private Long sneakers;
     private Long bag;
     private Long hat;
-    private Long sock;
+    private Long socks;
     private Long accessories;
 }

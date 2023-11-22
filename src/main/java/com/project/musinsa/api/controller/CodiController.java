@@ -31,19 +31,16 @@ public class CodiController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createCodi(@Validated @RequestBody CodiRequest codiRequest) {
-        codiService.createAndModifyCodi(codiRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(codiService.createCodi(codiRequest));
     }
 
     @PutMapping("/modify")
     public ResponseEntity<?> modifyCodi(@Validated @RequestBody CodiRequest codiRequest) {
-        codiService.createAndModifyCodi(codiRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(codiService.modifyCodi(codiRequest));
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<?> removeCodi(@RequestBody CodiRequest codiRequest) {
-        codiService.removeCodi(codiRequest);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(codiService.removeCodi(codiRequest));
     }
 }

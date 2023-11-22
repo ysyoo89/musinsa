@@ -1,6 +1,5 @@
 package com.project.musinsa.entity;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -16,38 +15,30 @@ import javax.persistence.*;
 @Table(name = "TBL_CODI")
 public class CodiEntity {
     @Id
-    @Column(name = "CATE")
+    @Column(name = "CATEGORY")
     private String brand;
 
-    @NotNull
-    @Column(name = "JACKET")
+    @Column(name = "TOP")
     private Long top;
 
-    @NotNull
-    @Column(name = "OTR")
+    @Column(name = "OUTERS")
     private Long outer;
 
-    @NotNull
-    @Column(name = "PNT")
+    @Column(name = "PANTS")
     private Long pants;
 
-    @NotNull
-    @Column(name = "SNKR")
+    @Column(name = "SNEAKERS")
     private Long sneakers;
 
-    @NotNull
-    @Column(name = "BACKPACK")
+    @Column(name = "BAG")
     private Long bag;
 
-    @NotNull
-    @Column(name = "CAPHAT")
+    @Column(name = "HAT")
     private Long hat;
 
-    @NotNull
-    @Column(name = "SCK")
-    private Long sock;
+    @Column(name = "SOCKS")
+    private Long socks;
 
-    @NotNull
-    @Column(name = "ACC")
+    @Column(name = "ACCESSORIES")
     private Long accessories;
 }

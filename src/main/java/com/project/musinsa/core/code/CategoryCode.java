@@ -14,7 +14,7 @@ public enum CategoryCode {
     SNEAKERS("sneakers", "스니커즈"),
     BAG("bag","가방"),
     HAT("hat","모자"),
-    SOCK("sock","양말"),
+    SOCK("socks","양말"),
     ACCESSORIES("accessories","액세서리");
 
     private final String category;

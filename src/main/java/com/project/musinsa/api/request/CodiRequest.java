@@ -13,20 +13,12 @@ import lombok.Setter;
 public class CodiRequest {
     @NotNull
     private String brand;
-    @NotNull
     private Long top;
-    @NotNull
     private Long outer;
-    @NotNull
     private Long pants;
-    @NotNull
     private Long sneakers;
-    @NotNull
     private Long bag;
-    @NotNull
     private Long hat;
-    @NotNull
-    private Long sock;
-    @NotNull
+    private Long socks;
     private Long accessories;
 }

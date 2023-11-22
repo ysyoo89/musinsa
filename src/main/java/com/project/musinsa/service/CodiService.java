@@ -5,6 +5,7 @@ import com.project.musinsa.api.response.BestItemResponse;
 import com.project.musinsa.api.response.model.BestItemModel;
 import com.project.musinsa.core.exception.code.ErrorCode;
 import com.project.musinsa.core.exception.exception.CustomException;
+import com.project.musinsa.core.response.ResultResponse;
 import com.project.musinsa.core.util.CategoryUtil;
 import com.project.musinsa.core.util.JsonUtil;
 import com.project.musinsa.entity.CodiEntity;
@@ -12,6 +13,7 @@ import com.project.musinsa.model.convertor.CodiConvertor;
 import com.project.musinsa.model.dto.CodiModel;
 import com.project.musinsa.repository.CodiRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,7 @@ public class CodiService {
         list.add(new BestItemModel().setSneakers(models));
         list.add(new BestItemModel().setBag(models));
         list.add(new BestItemModel().setHat(models));
-        list.add(new BestItemModel().setSock(models));
+        list.add(new BestItemModel().setSocks(models));
         list.add(new BestItemModel().setAccessories(models));
 
         return new BestItemResponse(list);
@@ -59,21 +61,37 @@ public class CodiService {
     }
 
     @Transactional
-    public void createAndModifyCodi(CodiRequest codiRequest) {
+    public ResultResponse createCodi(CodiRequest codiRequest) {
         try {
             CodiEntity entity = codiConvertor.createToEntity(codiRequest);
             codiRepository.save(entity);
         } catch (Exception e) {
             throw new CustomException(ErrorCode.REQUEST_DATA_NULL_POINT);
         }
+        return new ResultResponse(HttpStatus.OK);
     }
 
     @Transactional
-    public void removeCodi(CodiRequest codiRequest) {
+    public ResultResponse modifyCodi(CodiRequest codiRequest) {
+        try {
+            CodiEntity entity = codiConvertor.updateToEntity(
+                    codiRepository.findById(codiRequest.getBrand())
+                            .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)),
+                    codiRequest);
+            codiRepository.save(entity);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.REQUEST_DATA_NULL_POINT);
+        }
+        return new ResultResponse(HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResultResponse removeCodi(CodiRequest codiRequest) {
         try {
             codiRepository.deleteById(codiRequest.getBrand());
         } catch (Exception e) {
             throw new CustomException(ErrorCode.REQUEST_DATA_NULL_POINT);
         }
+        return new ResultResponse(HttpStatus.OK);
     }
 }

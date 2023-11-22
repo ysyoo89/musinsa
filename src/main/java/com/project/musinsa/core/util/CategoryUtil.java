@@ -21,7 +21,7 @@ public class CategoryUtil {
             case HAT:
                 return Comparator.comparing(CodiModel::getHat);
             case SOCK:
-                return Comparator.comparing(CodiModel::getSock);
+                return Comparator.comparing(CodiModel::getSocks);
             case SNEAKERS:
                 return Comparator.comparing(CodiModel::getSneakers);
             case ACCESSORIES:
@@ -47,7 +47,7 @@ public class CategoryUtil {
             case HAT:
                 return model.getHat();
             case SOCK:
-                return model.getSock();
+                return model.getSocks();
             case ACCESSORIES:
                 return model.getAccessories();
             default:

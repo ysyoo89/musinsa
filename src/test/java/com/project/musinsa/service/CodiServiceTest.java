@@ -8,31 +8,22 @@ import com.project.musinsa.api.response.model.BestItemModel;
 import com.project.musinsa.core.code.CategoryCode;
 import com.project.musinsa.core.exception.code.ErrorCode;
 import com.project.musinsa.core.exception.exception.CustomException;
-import com.project.musinsa.core.exception.response.ErrorResponse;
-import com.project.musinsa.core.util.CategoryUtil;
-import com.project.musinsa.core.util.NumberUtil;
 import com.project.musinsa.entity.CodiEntity;
 import com.project.musinsa.model.convertor.CodiConvertor;
-import com.project.musinsa.model.dto.CodiModel;
 import com.project.musinsa.repository.CodiRepository;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -201,9 +192,17 @@ public class CodiServiceTest {
     void createCodi() {
         final CodiEntity entity = new CodiEntity("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
         final CodiRequest request = new CodiRequest("J", 400L, 700L, 200L, 500L, 400L, 700L, 700L, 400L);
-        codiService.createAndModifyCodi(request);
+        codiService.createCodi(request);
 
         verify(codiRepository).save(ArgumentMatchers.refEq(entity));
+    }
+
+    @Test
+    @DisplayName("Fail save")
+    void saveCodiFail(){
+        CodiRequest emptyRequest = new CodiRequest();
+        CustomException e = assertThrows(CustomException.class, () -> codiService.createCodi(emptyRequest));
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.REQUEST_DATA_NULL_POINT.getMessage());
     }
 
     @Test
@@ -211,18 +210,17 @@ public class CodiServiceTest {
     void modifyCodi() {
         final CodiEntity entity = new CodiEntity("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
         final CodiRequest request = new CodiRequest("I", 20000L, 6700L, 3200L, 9500L, 2400L, 1700L, 1700L, 2400L);
-        codiService.createAndModifyCodi(request);
+        codiService.modifyCodi(request);
 
         verify(codiRepository).save(ArgumentMatchers.refEq(entity));
-
     }
 
     @Test
-    @DisplayName("Fail save")
-    void saveCodiFail(){
+    @DisplayName("Fail update")
+    void modifyCodiFail(){
         CodiRequest emptyRequest = new CodiRequest();
-        CustomException e = assertThrows(CustomException.class, () -> codiService.createAndModifyCodi(emptyRequest));
-        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.REQUEST_DATA_NULL_POINT.getMessage());
+        CustomException e = assertThrows(CustomException.class, () -> codiService.modifyCodi(emptyRequest));
+        assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.INTERNAL_SERVER_ERROR.getMessage());
     }
 
     @Test
@@ -239,7 +237,7 @@ public class CodiServiceTest {
     @DisplayName("Fail Delete")
     void removeCodiFail() {
         final CodiRequest emptyRequest = new CodiRequest();
-        CustomException e = assertThrows(CustomException.class, () -> codiService.createAndModifyCodi(emptyRequest));
+        CustomException e = assertThrows(CustomException.class, () -> codiService.createCodi(emptyRequest));
 
         assertThat(e.getErrorCode().getMessage()).isEqualTo(ErrorCode.REQUEST_DATA_NULL_POINT.getMessage());
     }
